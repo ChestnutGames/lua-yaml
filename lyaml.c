@@ -783,6 +783,7 @@ static int l_null(lua_State* L)
 
 LUALIB_API int luaopen_yaml(lua_State* L)
 {
+    luaL_checkversion(L);
     const luaL_Reg yamllib[] = {
         {"load", l_load},
         {"dump", l_dump},
@@ -790,6 +791,6 @@ LUALIB_API int luaopen_yaml(lua_State* L)
         {"null", l_null},
         {NULL, NULL}};
 
-    luaL_newlib(L, "yaml", yamllib, 0);
+    luaL_newlib(L, yamllib);
     return 1;
 }
