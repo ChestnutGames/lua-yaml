@@ -318,9 +318,10 @@ static void load(struct lua_yaml_loader* loader)
 
         loader->document_count++;
         if (load_node(loader) != 1)
-            RETURN_ERRMSG(loader, "unexpected END event");
-        if (loader->error)
-            return;
+            if (!loader->error)
+                RETURN_ERRMSG(loader, "unexpected END event");
+            else
+                return;
 
         if (!do_parse(loader))
             return;
@@ -328,14 +329,15 @@ static void load(struct lua_yaml_loader* loader)
             RETURN_ERRMSG(loader, "expected DOCUMENT_END_EVENT");
 
         /* reset anchor table */
-        lua_newtable(loader->L);
-        lua_replace(loader->L, loader->anchortable_index);
+        /*lua_newtable(loader->L);
+        lua_replace(loader->L, loader->anchortable_index);*/
     }
 }
 
 static int l_load(lua_State* L)
 {
     struct lua_yaml_loader loader;
+    memset(&loader, 0, sizeof(loader));
     int top = lua_gettop(L);
 
     luaL_argcheck(L, lua_isstring(L, 1), 1, "must provide a string argument");
@@ -370,7 +372,7 @@ static int l_load(lua_State* L)
 
     size_t l;
     const unsigned char* input = lua_tolstring(L, 1, &l);
-    yaml_parser_set_input_string(&loader.parser, input, &l);
+    yaml_parser_set_input_string(&loader.parser, input, l);
     load(&loader);
 
     delete_event(&loader);
@@ -379,7 +381,7 @@ static int l_load(lua_State* L)
     if (loader.error)
         lua_error(L);
 
-    return loader.document_count;
+    return loader.document_count + 1;
 }
 
 static int dump_node(struct lua_yaml_dumper* dumper);

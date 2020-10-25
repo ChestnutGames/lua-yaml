@@ -1,14 +1,16 @@
-%TAG ! tag:clarkevans.com,2002:
---- !shape
+%TAG !u! tag:clarkevans.com,2002:
+--- !u!shape &1
   # Use the ! handle for presenting
   # tag:clarkevans.com,2002:circle
-- !circle
+- !u!circle
   center: &ORIGIN {x: 73, y: 129}
   radius: 7
-- !line
+- !u!line
   start: *ORIGIN
   finish: { x: 89, y: 102 }
-- !label
+- !u!label
   start: *ORIGIN
   color: 0xFFEEBB
   text: Pretty vector drawing.
+--- !u!box &2
+box: hello
